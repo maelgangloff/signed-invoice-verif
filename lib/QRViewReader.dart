@@ -68,7 +68,7 @@ class QRViewReaderState extends State<QRViewReader> {
                                     ECPublicKey(String.fromCharCodes(data));
                               });
                             },
-                            onLongPress: (() => publicKey = null),
+                            onLongPress: (() => setState(() => publicKey = null)),
                             style:
                                 ElevatedButton.styleFrom(primary: Colors.white),
                             child: Icon(
