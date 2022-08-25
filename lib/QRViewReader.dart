@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -15,7 +16,7 @@ class QRViewReader extends StatefulWidget {
 
 class QRViewReaderState extends State<QRViewReader> {
   QRViewController? controller;
-  ECPublicKey publicKey = ECPublicKey('-----BEGIN PUBLIC KEY----- MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEgBW6ULaGUzdOXCY+BgX9CDl6vytP18GtHlmHAHiHDOF8+R1X/lcxhJuKbo0+kYyilq6Mam0f68WyTSQKbZm5lg== -----END PUBLIC KEY-----');
+  ECPublicKey? publicKey;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   @override
@@ -69,15 +70,11 @@ class QRViewReaderState extends State<QRViewReader> {
                                 publicKey = ECPublicKey(String.fromCharCodes(data));
                               });
                             },
+                            onLongPress: (() => publicKey = null),
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.red
+                              primary: Colors.white
                             ),
-                            child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
-                              builder: (context, snapshot) {
-                                return const Text('Load key');
-                              },
-                            )),
+                            child: Icon(publicKey == null ? Icons.key_off_rounded : Icons.key_rounded, color: publicKey == null ? Colors.red : Colors.green, size: 30)),
                       ),
                       Container(
                         margin: const EdgeInsets.all(8),
@@ -87,12 +84,12 @@ class QRViewReaderState extends State<QRViewReader> {
                               setState(() {});
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.grey
+                              primary: Colors.white
                             ),
                             child: FutureBuilder(
                               future: controller?.getFlashStatus(),
                               builder: (context, snapshot) {
-                                return const Text('Flash');
+                                return Icon(snapshot.data == false ? Icons.flash_off_rounded : Icons.flash_on_rounded, color: Colors.brown, size: 30);
                               },
                             )),
                       ),
@@ -108,8 +105,8 @@ class QRViewReaderState extends State<QRViewReader> {
   }
 
   Widget _buildQrView(BuildContext context) {
-    double scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
+    double scanArea = (MediaQuery.of(context).size.width < 300 ||
+            MediaQuery.of(context).size.height < 300)
         ? 150.0
         : 300.0;
     return QRView(
@@ -132,32 +129,49 @@ class QRViewReaderState extends State<QRViewReader> {
     controller.scannedDataStream.listen((scanData) async {
       controller.pauseCamera();
       try {
-        final JWT jwt = JWT.verify(scanData.code ?? '', publicKey);
-        final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
-        _showInformation(context, 'Valid invoice scanned!', '''Signed by: ${jwt.header?['kid'] ?? 'no kid'}
-From : ${jwt.issuer}
-To : ${jwt.subject}
-Reference: ${jwt.payload['ref']}
-Issue date: ${dateFormatter.format(DateTime.fromMillisecondsSinceEpoch(jwt.payload['iat'] * 1000))}
-Due date: ${dateFormatter.format(DateTime.fromMillisecondsSinceEpoch(jwt.payload['dueDate'] * 1000))}
-Amount: ${jwt.payload['curr']} ${jwt.payload['amt'].toStringAsFixed(2)}
-Quantity: ${jwt.payload['qty']}
-Number of line: ${jwt.payload['line']}
-Status: ${jwt.payload['pay'] == false ? 'Unpaid' : "Paid/${jwt.payload['pay']}"}
-''');
-      } on JWTInvalidError {
-        _showInformation(context, 'Error', 'This is not a valid invoice');
-      } on JWTExpiredError {
-        _showInformation(context, 'Error', 'This document has expired');
+        ECPublicKey? key = publicKey;
+        if(key != null) {
+          final JWT jwt = JWT.verify(scanData.code ?? '', key);
+          _showInvoiceInformation(
+            context,
+            'Valid signature!',
+            jwt.header?['kid'],
+            jwt.issuer,
+            jwt.subject,
+            jwt.payload['ref'],
+            DateTime.fromMillisecondsSinceEpoch(jwt.payload['iat'] * 1000),
+            DateTime.fromMillisecondsSinceEpoch(jwt.payload['dueDate'] * 1000),
+            jwt.payload['curr'],
+            jwt.payload['amt'],
+            jwt.payload['qty'],
+            jwt.payload['line'],
+            jwt.payload['pay']);
+        } else {
+          final jwt = JwtDecoder.decode(scanData.code ?? '');
+          _showInvoiceInformation(
+            context,
+            'Unable to authenticate',
+            'No kid',
+            jwt['iss'],
+            jwt['sub'],
+            jwt['ref'],
+            DateTime.fromMillisecondsSinceEpoch(jwt['iat'] * 1000),
+            DateTime.fromMillisecondsSinceEpoch(jwt['dueDate'] * 1000),
+            jwt['curr'],
+            jwt['amt'],
+            jwt['qty'],
+            jwt['line'],
+            jwt['pay']);
+        }
       } catch (e) {
-        _showInformation(context, 'Error', 'This is not a signed document');
+        _showInformation(context, 'Error', e.toString());
       }
     });
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unable to scan without camera access permission.')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unable to scan without camera access permission')));
     }
   }
 
@@ -180,6 +194,35 @@ Status: ${jwt.payload['pay'] == false ? 'Unpaid' : "Paid/${jwt.payload['pay']}"}
       );
     },
   );
+  }
+
+  void _showInvoiceInformation(
+    BuildContext context,
+    String title,
+    String? kid,
+    String? issuer,
+    String? subject,
+    String? reference,
+    DateTime? issueDate,
+    DateTime? dueDate,
+    String? currency,
+    double? amount,
+    int? quantity,
+    int? line,
+    dynamic pay
+    ) {
+    final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
+    _showInformation(context, title, '''Signed by: ${kid ?? 'no kid'}
+From : $issuer
+To : $subject
+Reference: $reference
+Issue date: ${issueDate != null ? dateFormatter.format(issueDate) : "N/A"}
+Due date: ${dueDate != null ? dateFormatter.format(dueDate) : "N/A"}
+Amount: $currency ${amount != null ? amount.toStringAsFixed(2) : "N/A"}
+Quantity: $quantity
+Number of line: $line
+Status: ${pay == false ? 'Unpaid' : "Paid/$pay"}
+''');
   }
 
   @override
