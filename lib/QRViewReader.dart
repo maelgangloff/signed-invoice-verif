@@ -143,38 +143,12 @@ class QRViewReaderState extends State<QRViewReader> {
         if (key != null) {
           final JWT jwt = JWT.verify(scanData.code ?? '', key);
           FlutterBeep.beep(true);
-          _showInvoiceInformation(
-              context,
-              'VALID!',
-              jwt.header?['kid'],
-              jwt.issuer,
-              jwt.subject,
-              jwt.payload['ref'],
-              DateTime.fromMillisecondsSinceEpoch(jwt.payload['iat'] * 1000),
-              DateTime.fromMillisecondsSinceEpoch(
-                  jwt.payload['dueDate'] * 1000),
-              jwt.payload['curr'],
-              jwt.payload['amt'],
-              jwt.payload['qty'],
-              jwt.payload['line'],
-              jwt.payload['pay']);
+          _showInvoiceInformation(context, 'VALID!', jwt);
         } else {
-          final jwt = JwtDecoder.decode(scanData.code ?? '');
+          final Map<String, dynamic> jwt =
+              JwtDecoder.decode(scanData.code ?? '');
           FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_ABBR_ALERT);
-          _showInvoiceInformation(
-              context,
-              'Unable to authenticate',
-              'no kid',
-              jwt['iss'],
-              jwt['sub'],
-              jwt['ref'],
-              DateTime.fromMillisecondsSinceEpoch(jwt['iat'] * 1000),
-              DateTime.fromMillisecondsSinceEpoch(jwt['dueDate'] * 1000),
-              jwt['curr'],
-              jwt['amt'],
-              jwt['qty'],
-              jwt['line'],
-              jwt['pay']);
+          _showInvoiceInformation(context, 'Unable to authenticate', jwt);
         }
       } catch (e) {
         FlutterBeep.beep(false);
@@ -212,29 +186,24 @@ class QRViewReaderState extends State<QRViewReader> {
   }
 
   void _showInvoiceInformation(
-      BuildContext context,
-      String title,
-      String? kid,
-      String? issuer,
-      String? subject,
-      String? reference,
-      DateTime? issueDate,
-      DateTime? dueDate,
-      String? currency,
-      double? amount,
-      int? quantity,
-      int? line,
-      dynamic pay) {
+      BuildContext context, String title, dynamic jwt) {
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
-    _showInformation(context, title, '''Signed by: ${kid ?? 'no kid'}
-From : $issuer
-To : $subject
-Reference: $reference
-Issue date: ${issueDate != null ? dateFormatter.format(issueDate) : "N/A"}
-Due date: ${dueDate != null ? dateFormatter.format(dueDate) : "N/A"}
-Amount: $currency ${amount != null ? amount.toStringAsFixed(2) : "N/A"}
-Quantity: $quantity
-Number of line: $line
+    final DateTime issueDate = DateTime.fromMillisecondsSinceEpoch(
+        (jwt is JWT ? jwt.payload['iat'] : jwt['iat']) * 1000);
+    final DateTime dueDate = DateTime.fromMillisecondsSinceEpoch(
+        (jwt is JWT ? jwt.payload['dueDate'] : jwt['dueDate']) * 1000);
+    final pay = jwt is JWT ? jwt.payload['pay'] : jwt['pay'];
+
+    _showInformation(context, title,
+        '''Signed by: ${jwt is JWT ? jwt.header!['kid'] : 'no kid'}
+From : ${jwt is JWT ? jwt.issuer : jwt['iss']}
+To : ${jwt is JWT ? jwt.subject : jwt['sub']}
+Reference: ${jwt is JWT ? jwt.payload['ref'] : jwt['ref']}
+Issue date: ${dateFormatter.format(issueDate)}
+Due date: ${dateFormatter.format(dueDate)}
+Amount: ${jwt is JWT ? jwt.payload['curr'] : jwt['curr']} ${(jwt is JWT ? jwt.payload['amt'] : jwt['amt']).toStringAsFixed(2)}
+Quantity: ${jwt is JWT ? jwt.payload['qty'] : jwt['qty']}
+Number of line: ${jwt is JWT ? jwt.payload['line'] : jwt['line']}
 Status: ${pay == false ? 'Unpaid' : (pay == null ? "Paid" : "Paid/$pay")}
 ''');
   }
