@@ -39,7 +39,6 @@ class QRViewReaderState extends State<QRViewReader> {
             child: FittedBox(
               fit: BoxFit.contain,
               child: Column(
-
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Row(
@@ -68,9 +67,12 @@ class QRViewReaderState extends State<QRViewReader> {
                                     ECPublicKey(String.fromCharCodes(data));
                               });
                             },
-                            onLongPress: (() => setState(() => publicKey = null)),
-                            style:
-                                ElevatedButton.styleFrom(primary: publicKey == null ? Colors.amber : Colors.green),
+                            onLongPress: (() =>
+                                setState(() => publicKey = null)),
+                            style: ElevatedButton.styleFrom(
+                                primary: publicKey == null
+                                    ? Colors.amber
+                                    : Colors.green),
                             child: Icon(
                                 publicKey == null
                                     ? Icons.key_off_rounded
@@ -162,7 +164,7 @@ class QRViewReaderState extends State<QRViewReader> {
           _showInvoiceInformation(
               context,
               'Unable to authenticate',
-              'No kid',
+              'no kid',
               jwt['iss'],
               jwt['sub'],
               jwt['ref'],
