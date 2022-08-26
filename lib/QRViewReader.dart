@@ -6,6 +6,7 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_beep/flutter_beep.dart';
 
 class QRViewReader extends StatefulWidget {
   const QRViewReader({Key? key}) : super(key: key);
@@ -35,13 +36,12 @@ class QRViewReaderState extends State<QRViewReader> {
         children: <Widget>[
           Expanded(flex: 5, child: _buildQrView(context)),
           Expanded(
-            flex: 1,
             child: FittedBox(
               fit: BoxFit.contain,
               child: Column(
+
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  const Text('Present a digital signature stamp'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -70,20 +70,19 @@ class QRViewReaderState extends State<QRViewReader> {
                             },
                             onLongPress: (() => setState(() => publicKey = null)),
                             style:
-                                ElevatedButton.styleFrom(primary: Colors.white),
+                                ElevatedButton.styleFrom(primary: publicKey == null ? Colors.amber : Colors.green),
                             child: Icon(
                                 publicKey == null
                                     ? Icons.key_off_rounded
                                     : Icons.key_rounded,
-                                color: publicKey == null
-                                    ? Colors.orange
-                                    : Colors.green,
+                                color: Colors.white,
                                 size: 30)),
                       ),
                       Container(
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                             onPressed: () async {
+                              await controller!.resumeCamera();
                               await controller?.toggleFlash();
                               setState(() {});
                             },
@@ -131,6 +130,7 @@ class QRViewReaderState extends State<QRViewReader> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
+    controller.resumeCamera();
     setState(() {
       this.controller = controller;
     });
@@ -140,9 +140,10 @@ class QRViewReaderState extends State<QRViewReader> {
         ECPublicKey? key = publicKey;
         if (key != null) {
           final JWT jwt = JWT.verify(scanData.code ?? '', key);
+          FlutterBeep.beep(true);
           _showInvoiceInformation(
               context,
-              'Valid signature!',
+              'VALID!',
               jwt.header?['kid'],
               jwt.issuer,
               jwt.subject,
@@ -157,6 +158,7 @@ class QRViewReaderState extends State<QRViewReader> {
               jwt.payload['pay']);
         } else {
           final jwt = JwtDecoder.decode(scanData.code ?? '');
+          FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_ABBR_ALERT);
           _showInvoiceInformation(
               context,
               'Unable to authenticate',
@@ -173,11 +175,10 @@ class QRViewReaderState extends State<QRViewReader> {
               jwt['pay']);
         }
       } catch (e) {
-        _showInformation(context, 'Error', e.toString());
+        FlutterBeep.beep(false);
+        _showInformation(context, 'ERROR!', e.toString());
       }
     });
-    controller.pauseCamera();
-    controller.resumeCamera();
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
@@ -232,7 +233,7 @@ Due date: ${dueDate != null ? dateFormatter.format(dueDate) : "N/A"}
 Amount: $currency ${amount != null ? amount.toStringAsFixed(2) : "N/A"}
 Quantity: $quantity
 Number of line: $line
-Status: ${pay == false ? 'Unpaid' : "Paid/$pay"}
+Status: ${pay == false ? 'Unpaid' : (pay == null ? "Paid" : "Paid/$pay")}
 ''');
   }
 
