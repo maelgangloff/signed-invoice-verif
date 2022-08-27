@@ -9,6 +9,7 @@ import 'package:flutter_beep/flutter_beep.dart';
 import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signed_invoice_verif/screens/informations_view.dart';
 
 import 'results_view.dart';
@@ -24,6 +25,7 @@ class ScannerViewState extends State<ScannerView> {
   QRViewController? controller;
   ECPublicKey? publicKey;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  bool showQR = false;
 
   @override
   void reassemble() {
@@ -36,13 +38,41 @@ class ScannerViewState extends State<ScannerView> {
 
   @override
   Widget build(BuildContext context) {
+    // Show the informations view on first startup
+    // The showQR boolean is there so that the user is not asked for permission before they dissmiss
+    // the information screen
+    // This might not be the best way to do it but it seems to work
+    if (showQR == false) {
+      SharedPreferences.getInstance().then((prefs) {
+        if (!(prefs.getBool("hasRun") ?? false)) {
+          prefs.setBool("hasRun", true);
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => const InformationsView()))
+              .then((_) {
+            setState(() {
+              showQR = true;
+            });
+          });
+        } else {
+          setState(() {
+            showQR = true;
+          });
+        }
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Scan an invoice signature stamp"),
       ),
       body: Stack(
         children: <Widget>[
-          _qrView(context),
+          showQR
+              ? _qrView(context)
+              : Expanded(
+                  child: Container(
+                    color: Colors.black,
+                  ),
+                ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
