@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -101,22 +102,36 @@ class ScannerViewState extends State<ScannerView> {
                         tooltip: "Load a public key",
                         padding: const EdgeInsets.all(8),
                         onPressed: () async {
-                          //TODO handle exceptions: user did not select the right key, user refused FS access
-                          FilePickerResult? result = await FilePicker.platform.pickFiles(
-                              allowMultiple: false,
-                              allowCompression: false,
-                              allowedExtensions: ['pem', 'pub', 'key'],
-                              dialogTitle: 'Load a public key file',
-                              type: FileType.custom,
-                              withData: true,
-                              withReadStream: false);
-                          if (result == null) return;
-                          PlatformFile file = result.files.first;
-                          Uint8List? data = file.bytes;
-                          if (data == null) return;
-                          setState(() {
-                            publicKey = ECPublicKey(String.fromCharCodes(data));
-                          });
+                          try {
+                            FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                allowMultiple: false,
+                                allowCompression: false,
+                                allowedExtensions: ['pem', 'pub', 'key'],
+                                dialogTitle: 'Load a public key file',
+                                type: FileType.custom,
+                                withData: true,
+                                withReadStream: false);
+                            if (result == null) return;
+                            PlatformFile file = result.files.first;
+                            Uint8List? data = file.bytes;
+                            if (data == null) return;
+                            setState(() {
+                              publicKey = ECPublicKey(String.fromCharCodes(data));
+                            });
+                          } on PlatformException catch (e) {
+                            if (e.code == "read_external_storage_permission_denied") {
+                              _showInformation(context, "Permission denied",
+                                  "Please allow file system access to open a key file");
+                            } else {
+                              _showInformation(context, "PlatformException",
+                                  e.message ?? "An unexpected exception occured");
+                            }
+                          } on JWTParseError {
+                            _showInformation(context, "Invalid key",
+                                "The selected file does not contain a valid ECPublicKey");
+                          } catch (e) {
+                            _showInformation(context, "An unexpected error occured", e.toString());
+                          }
                         },
                         icon: Icon(publicKey == null ? Icons.key_off_rounded : Icons.key_rounded,
                             color: publicKey == null ? Colors.white70 : Colors.white, size: 30)),
