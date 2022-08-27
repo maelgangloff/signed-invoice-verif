@@ -48,7 +48,8 @@ class ScannerViewState extends State<ScannerView> {
         if (!(prefs.getBool("hasRun") ?? false)) {
           prefs.setBool("hasRun", true);
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const InformationsView()))
+              .push(MaterialPageRoute(
+                  builder: (context) => const InformationsView()))
               .then((_) {
             setState(() {
               showQR = true;
@@ -81,8 +82,9 @@ class ScannerViewState extends State<ScannerView> {
               Container(
                 margin: const EdgeInsets.all(8),
                 clipBehavior: Clip.antiAlias,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.white12),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Colors.white12),
                 child: Row(
                   children: [
                     if (publicKey != null)
@@ -103,46 +105,60 @@ class ScannerViewState extends State<ScannerView> {
                         padding: const EdgeInsets.all(8),
                         onPressed: () async {
                           try {
-                            FilePickerResult? result = await FilePicker.platform.pickFiles(
-                                allowMultiple: false,
-                                allowCompression: false,
-                                allowedExtensions: ['pem', 'pub', 'key'],
-                                dialogTitle: 'Load a public key file',
-                                type: FileType.custom,
-                                withData: true,
-                                withReadStream: false);
+                            FilePickerResult? result = await FilePicker.platform
+                                .pickFiles(
+                                    allowMultiple: false,
+                                    allowCompression: false,
+                                    allowedExtensions: ['pem', 'pub', 'key'],
+                                    dialogTitle: 'Load a public key file',
+                                    type: FileType.custom,
+                                    withData: true,
+                                    withReadStream: false);
                             if (result == null) return;
                             PlatformFile file = result.files.first;
                             Uint8List? data = file.bytes;
                             if (data == null) return;
                             setState(() {
-                              publicKey = ECPublicKey(String.fromCharCodes(data));
+                              publicKey =
+                                  ECPublicKey(String.fromCharCodes(data));
                             });
                           } on PlatformException catch (e) {
-                            if (e.code == "read_external_storage_permission_denied") {
+                            if (e.code ==
+                                "read_external_storage_permission_denied") {
                               _showInformation(context, "Permission denied",
                                   "Please allow file system access to open a key file");
                             } else {
-                              _showInformation(context, "PlatformException",
-                                  e.message ?? "An unexpected exception occured");
+                              _showInformation(
+                                  context,
+                                  "PlatformException",
+                                  e.message ??
+                                      "An unexpected exception occured");
                             }
                           } on JWTParseError {
                             _showInformation(context, "Invalid key",
                                 "The selected file does not contain a valid ECPublicKey");
                           } catch (e) {
-                            _showInformation(context, "An unexpected error occured", e.toString());
+                            _showInformation(context,
+                                "An unexpected error occured", e.toString());
                           }
                         },
-                        icon: Icon(publicKey == null ? Icons.key_off_rounded : Icons.key_rounded,
-                            color: publicKey == null ? Colors.white70 : Colors.white, size: 30)),
+                        icon: Icon(
+                            publicKey == null
+                                ? Icons.key_off_rounded
+                                : Icons.key_rounded,
+                            color: publicKey == null
+                                ? Colors.white70
+                                : Colors.white,
+                            size: 30)),
                   ],
                 ),
               ),
               Container(
                 margin: const EdgeInsets.all(8),
                 clipBehavior: Clip.antiAlias,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.white12),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Colors.white12),
                 child: IconButton(
                   tooltip: "Toggle flash",
                   padding: const EdgeInsets.all(8),
@@ -155,8 +171,12 @@ class ScannerViewState extends State<ScannerView> {
                     future: controller?.getFlashStatus(),
                     builder: (context, snapshot) {
                       return Icon(
-                          snapshot.data ?? false ? Icons.flash_on_rounded : Icons.flash_off_rounded,
-                          color: snapshot.data ?? false ? Colors.white : Colors.white70,
+                          snapshot.data ?? false
+                              ? Icons.flash_on_rounded
+                              : Icons.flash_off_rounded,
+                          color: snapshot.data ?? false
+                              ? Colors.white
+                              : Colors.white70,
                           size: 30);
                     },
                   ),
@@ -165,14 +185,15 @@ class ScannerViewState extends State<ScannerView> {
               Container(
                 margin: const EdgeInsets.all(8),
                 clipBehavior: Clip.antiAlias,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.white12),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Colors.white12),
                 child: IconButton(
                   tooltip: "More information",
                   padding: const EdgeInsets.all(8),
                   onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: ((context) => const InformationsView())));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: ((context) => const InformationsView())));
                   },
                   icon: const Icon(
                     Icons.info_outline_rounded,
@@ -197,8 +218,9 @@ class ScannerViewState extends State<ScannerView> {
           borderRadius: 10,
           borderLength: 30,
           borderWidth: 10,
-          cutOutSize:
-              min(MediaQuery.of(context).size.width, MediaQuery.of(context).size.width) * .7),
+          cutOutSize: min(MediaQuery.of(context).size.width,
+                  MediaQuery.of(context).size.width) *
+              .7),
       onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
     );
   }
@@ -241,8 +263,8 @@ class ScannerViewState extends State<ScannerView> {
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Unable to scan without camera access permission')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Unable to scan without camera access permission')));
     }
   }
 
@@ -258,7 +280,8 @@ class ScannerViewState extends State<ScannerView> {
               child: Text(
                 'OK',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary),
               ),
               onPressed: () {
                 controller!.resumeCamera();
@@ -273,8 +296,8 @@ class ScannerViewState extends State<ScannerView> {
 
   void _showResults(BuildContext context, DecodedState state, dynamic jwt) {
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
-    final DateTime issueDate =
-        DateTime.fromMillisecondsSinceEpoch((jwt is JWT ? jwt.payload['iat'] : jwt['iat']) * 1000);
+    final DateTime issueDate = DateTime.fromMillisecondsSinceEpoch(
+        (jwt is JWT ? jwt.payload['iat'] : jwt['iat']) * 1000);
     final DateTime dueDate = DateTime.fromMillisecondsSinceEpoch(
         (jwt is JWT ? jwt.payload['dueDate'] : jwt['dueDate']) * 1000);
     final pay = jwt is JWT ? jwt.payload['pay'] : jwt['pay'];

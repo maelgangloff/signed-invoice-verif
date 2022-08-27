@@ -36,7 +36,8 @@ You can toggle the flash with the flash button.'''),
               RichText(
                 text: TextSpan(
                   children: [
-                    const TextSpan(text: "This app is open source and published on "),
+                    const TextSpan(
+                        text: "This app is open source and published on "),
                     TextSpan(
                       text: "GitHub",
                       style: TextStyle(

@@ -23,8 +23,9 @@ class ResultsView extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Table(
           defaultColumnWidth: const IntrinsicColumnWidth(),
-          border:
-              TableBorder(horizontalInside: BorderSide(color: state.dividerColor ?? Colors.black)),
+          border: TableBorder(
+              horizontalInside:
+                  BorderSide(color: state.dividerColor ?? Colors.black)),
           children: data.entries
               .map((entry) => TableRow(children: [
                     TableCell(
