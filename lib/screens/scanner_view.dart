@@ -56,6 +56,7 @@ class ScannerViewState extends State<ScannerView> {
                   children: [
                     if (publicKey != null)
                       IconButton(
+                          tooltip: "Disable verification",
                           onPressed: () {
                             setState(() {
                               publicKey = null;
@@ -67,6 +68,7 @@ class ScannerViewState extends State<ScannerView> {
                             color: Colors.white,
                           )),
                     IconButton(
+                        tooltip: "Load a public key",
                         padding: const EdgeInsets.all(8),
                         onPressed: () async {
                           //TODO handle exceptions: user did not select the right key, user refused FS access
@@ -97,6 +99,7 @@ class ScannerViewState extends State<ScannerView> {
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.white12),
                 child: IconButton(
+                  tooltip: "Toggle flash",
                   padding: const EdgeInsets.all(8),
                   onPressed: () async {
                     await controller!.resumeCamera();
@@ -120,6 +123,7 @@ class ScannerViewState extends State<ScannerView> {
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.white12),
                 child: IconButton(
+                  tooltip: "More information",
                   padding: const EdgeInsets.all(8),
                   onPressed: () {
                     Navigator.of(context)
