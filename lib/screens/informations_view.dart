@@ -37,8 +37,9 @@ You can toggle the flash with the flash button.'''),
                 text: TextSpan(
                   children: [
                     const TextSpan(
-                        text: "This mobile application allows to verify invoices generated with "),
-                      TextSpan(
+                        text:
+                            "This mobile application allows to verify invoices generated with "),
+                    TextSpan(
                       text: "signed-invoice tool",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -53,8 +54,8 @@ You can toggle the flash with the flash button.'''),
                               ),
                               mode: LaunchMode.externalApplication);
                         },
-                      ),
-                      const TextSpan(text: '.\n'),
+                    ),
+                    const TextSpan(text: '.\n'),
                     const TextSpan(
                         text: "This app is open source and published on "),
                     TextSpan(
