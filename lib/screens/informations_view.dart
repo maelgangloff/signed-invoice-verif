@@ -24,7 +24,7 @@ class InformationsView extends StatelessWidget {
                 ),
               ),
               const Text('''By default the app does not verify the signatures.
-To verify a stamp, import the public key by clicking on the key icon.
+To verify a Digital Signature Stamp (DSS), import the public key by clicking on the key icon.
 You can toggle the flash with the flash button.'''),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -56,7 +56,7 @@ You can toggle the flash with the flash button.'''),
                     ),
                     const TextSpan(
                         text:
-                            ". Go there to contribute, donate, submit a feature request or a bug report? Any contributions are very welcome!")
+                            ". Go there to contribute, donate, submit a feature request or a bug report. Any contributions are welcome!")
                   ],
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),

@@ -10,7 +10,6 @@ import 'package:flutter_beep/flutter_beep.dart';
 import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signed_invoice_verif/screens/informations_view.dart';
 
 import 'results_view.dart';
@@ -26,7 +25,6 @@ class ScannerViewState extends State<ScannerView> {
   QRViewController? controller;
   ECPublicKey? publicKey;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  bool showQR = false;
 
   @override
   void reassemble() {
@@ -39,42 +37,13 @@ class ScannerViewState extends State<ScannerView> {
 
   @override
   Widget build(BuildContext context) {
-    // Show the informations view on first startup
-    // The showQR boolean is there so that the user is not asked for permission before they dissmiss
-    // the information screen
-    // This might not be the best way to do it but it seems to work
-    if (showQR == false) {
-      SharedPreferences.getInstance().then((prefs) {
-        if (!(prefs.getBool("hasRun") ?? false)) {
-          prefs.setBool("hasRun", true);
-          Navigator.of(context)
-              .push(MaterialPageRoute(
-                  builder: (context) => const InformationsView()))
-              .then((_) {
-            setState(() {
-              showQR = true;
-            });
-          });
-        } else {
-          setState(() {
-            showQR = true;
-          });
-        }
-      });
-    }
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Scan an invoice signature stamp"),
+        title: const Text('Scan a Digital Signature Stamp'),
       ),
       body: Stack(
         children: <Widget>[
-          showQR
-              ? _qrView(context)
-              : Expanded(
-                  child: Container(
-                    color: Colors.black,
-                  ),
-                ),
+          _qrView(context),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,8 +104,8 @@ class ScannerViewState extends State<ScannerView> {
                                       "An unexpected exception occured");
                             }
                           } on JWTParseError {
-                            _showInformation(context, "Invalid key",
-                                "The selected file does not contain a valid ECPublicKey");
+                            _showInformation(context, "Invalid public key",
+                                "The selected file does not contain a valid prime256v1 public key.");
                           } catch (e) {
                             _showInformation(context,
                                 "An unexpected error occured", e.toString());
@@ -246,8 +215,8 @@ class ScannerViewState extends State<ScannerView> {
       } catch (e) {
         FlutterBeep.beep(false);
         if (e is FormatException) {
-          _showInformation(context, 'Invalid stamp',
-              "Couldn't decode stamp, QR code does not contain a valid JWT token. This happens sometimes when the qr code isn't read properly. In that case you should try again.");
+          _showInformation(context, 'Invalid DSS',
+              "Couldn't decode DSS, QR code does not contain a valid JWT token. This happens sometimes when the qr code isn't read properly. In that case you should try again.");
         } else if (e.toString().contains("JWTInvalidError")) {
           final jwt = JwtDecoder.decode(scanData.code ?? '');
           _showResults(context, Invalid(), jwt);
@@ -300,8 +269,8 @@ class ScannerViewState extends State<ScannerView> {
         (jwt is JWT ? jwt.payload['iat'] : jwt['iat']) * 1000);
     final DateTime dueDate = DateTime.fromMillisecondsSinceEpoch(
         (jwt is JWT ? jwt.payload['dueDate'] : jwt['dueDate']) * 1000);
-    final pay = jwt is JWT ? jwt.payload['pay'] : jwt['pay'];
-    final data = {
+    final dynamic pay = jwt is JWT ? jwt.payload['pay'] : jwt['pay'];
+    final Map<String, String> data = {
       'Signed by': "${jwt is JWT ? jwt.header!['kid'] : 'no kid'}",
       'From': "${jwt is JWT ? jwt.issuer : jwt['iss']}",
       'To': "${jwt is JWT ? jwt.subject : jwt['sub']}",
