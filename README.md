@@ -7,10 +7,8 @@ The application is still draft, it has no logo, the ergonomics are limited. Feel
 ## How it works
 The application works in two different modes:
 
-- Reading of the invoice without authentication of the cryptographic signature (default mode). **This mode is active when the lower left key is orange**. The application only reads the contents of the stamp without verifying the signature.
+- Reading of the invoice without authentication of the cryptographic signature (default mode): The application only reads the contents of the stamp without verifying the signature.
 
-- Verification of the authenticity of the invoice. **This mode is active when the lower left key is green.** The application will ask you to select the document issuer's public key file. When a stamp is scanned, the signature is verified. If the signature does not match, an error is thrown and the invoice is marked as not authentic.
+- Verification of the authenticity of the invoice. The application will ask you to select the document issuer's public key file. When a stamp is scanned, the signature is verified. If the signature does not match, an error is thrown and the invoice is marked as not authentic.
 
-**A long press on the first button allows you to return to the first mode.**
-
-![screenshot](screenshots/result.jpg)
+![screenshot](screenshots/main.png)
