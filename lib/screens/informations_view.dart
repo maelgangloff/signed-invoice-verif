@@ -39,7 +39,7 @@ You can toggle the flash with the flash button.'''),
                     const TextSpan(
                         text: "This app is open source and published on "),
                     TextSpan(
-                      text: "GitHub",
+                      text: "GitHub (maelgangloff/signed-invoice-verif)",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.primary,

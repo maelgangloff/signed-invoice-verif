@@ -161,8 +161,11 @@ class ScannerViewState extends State<ScannerView> {
                   tooltip: "More information",
                   padding: const EdgeInsets.all(8),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: ((context) => const InformationsView())));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: ((context) {
+                      controller?.pauseCamera();
+                      return const InformationsView();
+                    }))).then((value) => controller?.resumeCamera());
                   },
                   icon: const Icon(
                     Icons.info_outline_rounded,
