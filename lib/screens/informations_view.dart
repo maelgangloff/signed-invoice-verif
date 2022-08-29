@@ -10,7 +10,9 @@ class InformationsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Information')),
+      appBar: AppBar(
+          title: const Text('Information'),
+          backgroundColor: Colors.amberAccent),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -40,7 +42,7 @@ You can toggle the flash with the flash button.'''),
                         text:
                             "This mobile application allows to verify invoices generated with "),
                     TextSpan(
-                      text: "signed-invoice tool",
+                      text: "signed-invoice",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.primary,
@@ -55,7 +57,7 @@ You can toggle the flash with the flash button.'''),
                               mode: LaunchMode.externalApplication);
                         },
                     ),
-                    const TextSpan(text: '.\n'),
+                    const TextSpan(text: ' tool.\n'),
                     const TextSpan(
                         text: "This app is open source and published on "),
                     TextSpan(

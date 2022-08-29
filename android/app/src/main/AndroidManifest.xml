@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.maelgangloff.signed_invoice_verif">
    <application
-        android:label="Invoice verif"
+        android:label="Invoice Verif"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -6,6 +6,7 @@ void main() {
 
   runApp(
     MaterialApp(
+      title: 'Invoice Verif',
       home: const MyApp(),
       theme: ThemeData.from(
         colorScheme: ColorScheme.fromSeed(

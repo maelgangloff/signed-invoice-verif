@@ -17,7 +17,7 @@ class ResultsView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: state.appBarBackground,
         foregroundColor: state.appBarText,
-        title: Text("${state.name} invoice decoded"),
+        title: Text("${state.name} invoice"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

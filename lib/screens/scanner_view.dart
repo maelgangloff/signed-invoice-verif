@@ -39,6 +39,7 @@ class ScannerViewState extends State<ScannerView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.amberAccent,
         title: const Text('Scan a Digital Signature Stamp'),
       ),
       body: Stack(
@@ -95,7 +96,7 @@ class ScannerViewState extends State<ScannerView> {
                             if (e.code ==
                                 "read_external_storage_permission_denied") {
                               _showInformation(context, "Permission denied",
-                                  "Please allow file system access to open a key file");
+                                  "Please allow file system access to open a key file.");
                             } else {
                               _showInformation(
                                   context,
@@ -108,7 +109,7 @@ class ScannerViewState extends State<ScannerView> {
                                 "The selected file does not contain a valid prime256v1 public key.");
                           } catch (e) {
                             _showInformation(context,
-                                "An unexpected error occured", e.toString());
+                                "An unexpected error occured.", e.toString());
                           }
                         },
                         icon: Icon(
