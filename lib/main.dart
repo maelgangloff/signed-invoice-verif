@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:signed_invoice_verif/screens/scanner_view.dart';
 
 void main() {
@@ -7,6 +9,13 @@ void main() {
   runApp(
     MaterialApp(
       title: 'Invoice Verif',
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const MyApp(),
       theme: ThemeData.from(
         colorScheme: ColorScheme.fromSeed(

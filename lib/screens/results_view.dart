@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ResultsView extends StatelessWidget {
   const ResultsView({
@@ -12,12 +13,17 @@ class ResultsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations? l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: state.scaffoldBackground,
       appBar: AppBar(
         backgroundColor: state.appBarBackground,
         foregroundColor: state.appBarText,
-        title: Text("${state.name} invoice"),
+        title: Text(state is Valid
+            ? l10n!.valid
+            : state is Invalid
+                ? l10n!.invalid
+                : l10n!.unverified),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -51,7 +57,6 @@ abstract class DecodedState {
   Color? appBarText;
   Color? scaffoldBackground;
   Color? dividerColor;
-  String? name;
 }
 
 class Valid implements DecodedState {
@@ -63,8 +68,6 @@ class Valid implements DecodedState {
   Color? scaffoldBackground = Colors.green.shade50;
   @override
   Color? dividerColor = Colors.green.shade200;
-  @override
-  String? name = "Valid";
 }
 
 class Invalid implements DecodedState {
@@ -76,8 +79,6 @@ class Invalid implements DecodedState {
   Color? scaffoldBackground = Colors.red.shade50;
   @override
   Color? dividerColor = Colors.red.shade200;
-  @override
-  String? name = "Invalid";
 }
 
 class Expired implements DecodedState {
@@ -89,8 +90,6 @@ class Expired implements DecodedState {
   Color? scaffoldBackground = Colors.amber.shade50;
   @override
   Color? dividerColor = Colors.amber.shade200;
-  @override
-  String? name = "Expired";
 }
 
 class Unverified implements DecodedState {
@@ -102,6 +101,4 @@ class Unverified implements DecodedState {
   Color? scaffoldBackground = Colors.white;
   @override
   Color? dividerColor = Colors.grey.shade400;
-  @override
-  String? name = "Unverified";
 }

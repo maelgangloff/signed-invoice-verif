@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InformationsView extends StatelessWidget {
   const InformationsView({
@@ -21,26 +22,24 @@ class InformationsView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Using the app",
+                  AppLocalizations.of(context)!.usingTheApp,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
-              const Text('''By default the app does not verify the signatures.
-To verify a Digital Signature Stamp (DSS), import the public key by clicking on the key icon.
-You can toggle the flash with the flash button.'''),
+              Text(AppLocalizations.of(context)!.usingTheAppContent),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "About the app",
+                  AppLocalizations.of(context)!.aboutTheApp,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               RichText(
                 text: TextSpan(
                   children: [
-                    const TextSpan(
+                    TextSpan(
                         text:
-                            "This mobile application allows to verify invoices generated with "),
+                            AppLocalizations.of(context)!.aboutTheAppContent1),
                     TextSpan(
                       text: "signed-invoice",
                       style: TextStyle(
@@ -57,9 +56,12 @@ You can toggle the flash with the flash button.'''),
                               mode: LaunchMode.externalApplication);
                         },
                     ),
-                    const TextSpan(text: ' tool.\n'),
-                    const TextSpan(
-                        text: "This app is open source and published on "),
+                    TextSpan(
+                        text:
+                            AppLocalizations.of(context)!.aboutTheAppContent2),
+                    TextSpan(
+                        text:
+                            AppLocalizations.of(context)!.aboutTheAppContent3),
                     TextSpan(
                       text: "GitHub (maelgangloff/signed-invoice-verif)",
                       style: TextStyle(
@@ -76,9 +78,8 @@ You can toggle the flash with the flash button.'''),
                               mode: LaunchMode.externalApplication);
                         },
                     ),
-                    const TextSpan(
-                        text:
-                            ". Go there to contribute, donate, submit a feature request or a bug report. Any contributions are welcome!")
+                    TextSpan(
+                        text: AppLocalizations.of(context)!.aboutTheAppContent4)
                   ],
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),

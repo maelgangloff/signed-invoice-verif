@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:intl/intl.dart';
@@ -40,7 +41,7 @@ class ScannerViewState extends State<ScannerView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amberAccent,
-        title: const Text('Scan a Digital Signature Stamp'),
+        title: Text(AppLocalizations.of(context)!.scanADigitalSignatureStamp),
       ),
       body: Stack(
         children: <Widget>[
@@ -59,7 +60,8 @@ class ScannerViewState extends State<ScannerView> {
                   children: [
                     if (publicKey != null)
                       IconButton(
-                          tooltip: "Disable verification",
+                          tooltip:
+                              AppLocalizations.of(context)!.disableVerification,
                           onPressed: () {
                             setState(() {
                               publicKey = null;
@@ -71,7 +73,7 @@ class ScannerViewState extends State<ScannerView> {
                             color: Colors.white,
                           )),
                     IconButton(
-                        tooltip: "Load a public key",
+                        tooltip: AppLocalizations.of(context)!.loadAPublicKey,
                         padding: const EdgeInsets.all(8),
                         onPressed: () async {
                           try {
@@ -80,7 +82,8 @@ class ScannerViewState extends State<ScannerView> {
                                     allowMultiple: false,
                                     allowCompression: false,
                                     allowedExtensions: ['pem', 'pub', 'key'],
-                                    dialogTitle: 'Load a public key file',
+                                    dialogTitle: AppLocalizations.of(context)!
+                                        .loadAPublicKeyFile,
                                     type: FileType.custom,
                                     withData: true,
                                     withReadStream: false);
@@ -95,21 +98,32 @@ class ScannerViewState extends State<ScannerView> {
                           } on PlatformException catch (e) {
                             if (e.code ==
                                 "read_external_storage_permission_denied") {
-                              _showInformation(context, "Permission denied",
-                                  "Please allow file system access to open a key file.");
+                              _showInformation(
+                                  context,
+                                  AppLocalizations.of(context)!
+                                      .permissionDenied,
+                                  AppLocalizations.of(context)!
+                                      .pleaseAllowFSAcessFile);
                             } else {
                               _showInformation(
                                   context,
                                   "PlatformException",
                                   e.message ??
-                                      "An unexpected exception occured");
+                                      AppLocalizations.of(context)!
+                                          .unexpectedErrorOccured);
                             }
                           } on JWTParseError {
-                            _showInformation(context, "Invalid public key",
-                                "The selected file does not contain a valid prime256v1 public key.");
+                            _showInformation(
+                                context,
+                                AppLocalizations.of(context)!.invalidPublicKey,
+                                AppLocalizations.of(context)!
+                                    .invalidPublicKeyContent);
                           } catch (e) {
-                            _showInformation(context,
-                                "An unexpected error occured.", e.toString());
+                            _showInformation(
+                                context,
+                                AppLocalizations.of(context)!
+                                    .unexpectedErrorOccured,
+                                e.toString());
                           }
                         },
                         icon: Icon(
@@ -130,7 +144,7 @@ class ScannerViewState extends State<ScannerView> {
                     borderRadius: BorderRadius.circular(100),
                     color: Colors.white12),
                 child: IconButton(
-                  tooltip: "Toggle flash",
+                  tooltip: AppLocalizations.of(context)!.toggleFlash,
                   padding: const EdgeInsets.all(8),
                   onPressed: () async {
                     await controller!.resumeCamera();
@@ -159,7 +173,7 @@ class ScannerViewState extends State<ScannerView> {
                     borderRadius: BorderRadius.circular(100),
                     color: Colors.white12),
                 child: IconButton(
-                  tooltip: "More information",
+                  tooltip: AppLocalizations.of(context)!.moreInformation,
                   padding: const EdgeInsets.all(8),
                   onPressed: () {
                     Navigator.of(context)
@@ -219,8 +233,8 @@ class ScannerViewState extends State<ScannerView> {
       } catch (e) {
         FlutterBeep.beep(false);
         if (e is FormatException) {
-          _showInformation(context, 'Invalid DSS',
-              "Couldn't decode DSS, QR code does not contain a valid JWT token. This happens sometimes when the qr code isn't read properly. In that case you should try again.");
+          _showInformation(context, AppLocalizations.of(context)!.invalidDSS,
+              AppLocalizations.of(context)!.invalidDSSContent);
         } else if (e.toString().contains("JWTInvalidError")) {
           final jwt = JwtDecoder.decode(scanData.code ?? '');
           _showResults(context, Invalid(), jwt);
@@ -228,7 +242,8 @@ class ScannerViewState extends State<ScannerView> {
           final jwt = JwtDecoder.decode(scanData.code ?? '');
           _showResults(context, Expired(), jwt);
         } else {
-          _showInformation(context, 'Error', e.toString());
+          _showInformation(
+              context, AppLocalizations.of(context)!.error, e.toString());
         }
       }
     });
@@ -236,8 +251,9 @@ class ScannerViewState extends State<ScannerView> {
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Unable to scan without camera access permission')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text(AppLocalizations.of(context)!.unableScanWithoutPermission)));
     }
   }
 
@@ -268,6 +284,7 @@ class ScannerViewState extends State<ScannerView> {
   }
 
   void _showResults(BuildContext context, DecodedState state, dynamic jwt) {
+    final AppLocalizations? l10n = AppLocalizations.of(context);
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
     final DateTime issueDate = DateTime.fromMillisecondsSinceEpoch(
         (jwt is JWT ? jwt.payload['iat'] : jwt['iat']) * 1000);
@@ -275,17 +292,19 @@ class ScannerViewState extends State<ScannerView> {
         (jwt is JWT ? jwt.payload['dueDate'] : jwt['dueDate']) * 1000);
     final dynamic pay = jwt is JWT ? jwt.payload['pay'] : jwt['pay'];
     final Map<String, String> data = {
-      'Signed by': "${jwt is JWT ? jwt.header!['kid'] : 'no kid'}",
-      'From': "${jwt is JWT ? jwt.issuer : jwt['iss']}",
-      'To': "${jwt is JWT ? jwt.subject : jwt['sub']}",
-      'Reference': "${jwt is JWT ? jwt.payload['ref'] : jwt['ref']}",
-      'Issue date': dateFormatter.format(issueDate),
-      'Due date': dateFormatter.format(dueDate),
-      'Amount':
+      l10n!.signedBy: "${jwt is JWT ? jwt.header!['kid'] : 'no kid'}",
+      l10n.from: "${jwt is JWT ? jwt.issuer : jwt['iss']}",
+      l10n.to: "${jwt is JWT ? jwt.subject : jwt['sub']}",
+      l10n.reference: "${jwt is JWT ? jwt.payload['ref'] : jwt['ref']}",
+      l10n.issueDate: dateFormatter.format(issueDate),
+      l10n.dueDate: dateFormatter.format(dueDate),
+      l10n.amount:
           "${jwt is JWT ? jwt.payload['curr'] : jwt['curr']} ${(jwt is JWT ? jwt.payload['amt'] : jwt['amt']).toStringAsFixed(2)}",
-      'Quantity': "${jwt is JWT ? jwt.payload['qty'] : jwt['qty']}",
-      'Number of line': "${jwt is JWT ? jwt.payload['line'] : jwt['line']}",
-      'Status': pay == false ? 'Unpaid' : (pay == null ? "Paid" : "Paid/$pay"),
+      l10n.quantity: "${jwt is JWT ? jwt.payload['qty'] : jwt['qty']}",
+      l10n.numberOfLine: "${jwt is JWT ? jwt.payload['line'] : jwt['line']}",
+      l10n.status: pay == false
+          ? l10n.unpaid
+          : (pay == null ? l10n.paid : "${l10n.paid}/$pay"),
     };
     Navigator.of(context)
         .push(
