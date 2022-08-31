@@ -21,7 +21,7 @@
     "invalidDSSContent": "Impossible de décoder le DSS, le QR code ne contient pas un jeton JWT valide. Veuillez réessayer.",
     "error": "Erreur",
     "unableScanWithoutPermission": "Impossible de scanner sans accès à la caméra",
-    "signedBy": "Signé par",
+    "signedBy": "Signée par",
     "from": "De",
     "to": "Pour",
     "reference": "Référence",

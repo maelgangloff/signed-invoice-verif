@@ -222,29 +222,31 @@ class ScannerViewState extends State<ScannerView> {
       try {
         ECPublicKey? key = publicKey;
         if (key != null) {
-          final JWT jwt = JWT.verify(scanData.code ?? '', key);
           FlutterBeep.beep(true);
-          _showResults(context, Valid(), jwt);
-        } else {
-          final jwt = JwtDecoder.decode(scanData.code ?? '');
-          FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_ABBR_ALERT);
-          _showResults(context, Unverified(), jwt);
+          return _showResults(
+              context, Valid(), JWT.verify(scanData.code ?? '', key));
         }
+        FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_ABBR_ALERT);
+        return _showResults(
+            context, Unverified(), JwtDecoder.decode(scanData.code ?? ''));
       } catch (e) {
         FlutterBeep.beep(false);
         if (e is FormatException) {
-          _showInformation(context, AppLocalizations.of(context)!.invalidDSS,
+          return _showInformation(
+              context,
+              AppLocalizations.of(context)!.invalidDSS,
               AppLocalizations.of(context)!.invalidDSSContent);
-        } else if (e.toString().contains("JWTInvalidError")) {
-          final jwt = JwtDecoder.decode(scanData.code ?? '');
-          _showResults(context, Invalid(), jwt);
-        } else if (e.toString().contains("JWTExpiredError")) {
-          final jwt = JwtDecoder.decode(scanData.code ?? '');
-          _showResults(context, Expired(), jwt);
-        } else {
-          _showInformation(
-              context, AppLocalizations.of(context)!.error, e.toString());
         }
+        if (e.toString().contains("JWTInvalidError")) {
+          return _showResults(
+              context, Invalid(), JwtDecoder.decode(scanData.code ?? ''));
+        }
+        if (e.toString().contains("JWTExpiredError")) {
+          return _showResults(
+              context, Expired(), JwtDecoder.decode(scanData.code ?? ''));
+        }
+        return _showInformation(
+            context, AppLocalizations.of(context)!.error, e.toString());
       }
     });
   }
@@ -284,7 +286,7 @@ class ScannerViewState extends State<ScannerView> {
   }
 
   void _showResults(BuildContext context, DecodedState state, dynamic jwt) {
-    final AppLocalizations? l10n = AppLocalizations.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
     final DateTime issueDate = DateTime.fromMillisecondsSinceEpoch(
         (jwt is JWT ? jwt.payload['iat'] : jwt['iat']) * 1000);
@@ -292,7 +294,8 @@ class ScannerViewState extends State<ScannerView> {
         (jwt is JWT ? jwt.payload['dueDate'] : jwt['dueDate']) * 1000);
     final dynamic pay = jwt is JWT ? jwt.payload['pay'] : jwt['pay'];
     final Map<String, String> data = {
-      l10n!.signedBy: "${jwt is JWT ? jwt.header!['kid'] : 'no kid'}",
+      l10n.signedBy:
+          "${jwt is JWT ? jwt.header!['kid'] ?? 'no kid' : 'no kid'}",
       l10n.from: "${jwt is JWT ? jwt.issuer : jwt['iss']}",
       l10n.to: "${jwt is JWT ? jwt.subject : jwt['sub']}",
       l10n.reference: "${jwt is JWT ? jwt.payload['ref'] : jwt['ref']}",
