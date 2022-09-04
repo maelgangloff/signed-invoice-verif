@@ -17,6 +17,7 @@
     "unexpectedErrorOccured": "Une erreur inattendue est survenue.",
     "toggleFlash": "Flash",
     "moreInformation": "Plus d'information",
+    "information": "Information",
     "invalidDSS": "DSS invalide",
     "invalidDSSContent": "Impossible de décoder le DSS, le QR code ne contient pas un jeton JWT valide. Veuillez réessayer.",
     "error": "Erreur",

@@ -12,7 +12,7 @@ class InformationsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Information'),
+          title: Text(AppLocalizations.of(context)!.information),
           backgroundColor: Colors.amberAccent),
       body: Center(
         child: Padding(

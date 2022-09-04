@@ -17,6 +17,7 @@
     "unexpectedErrorOccured": "Ein unerwarteter Fehler ist aufgetreten.",
     "toggleFlash": "Blitz umschalten",
     "moreInformation": "Mehr Informationen",
+    "information": "Informationen",
     "invalidDSS": "Ungültiger DSS",
     "invalidDSSContent": "Der DSS kann nicht dekodiert werden, der QR-Code enthält kein gültiges JWT-Token. Versuch es noch einmal.",
     "error": "Fehler",
