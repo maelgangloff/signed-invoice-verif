@@ -287,7 +287,7 @@ class ScannerViewState extends State<ScannerView> {
 
   void _showResults(BuildContext context, DecodedState state, dynamic jwt) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
+    final DateFormat dateFormatter = DateFormat(l10n.dateFormat);
     final DateTime issueDate = DateTime.fromMillisecondsSinceEpoch(
         (jwt is JWT ? jwt.payload['iat'] : jwt['iat']) * 1000);
     final DateTime dueDate = DateTime.fromMillisecondsSinceEpoch(

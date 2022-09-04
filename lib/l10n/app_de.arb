@@ -36,5 +36,6 @@
     "unpaid": "Unbezahlt",
     "valid": "Geprüfte Rechnung",
     "invalid": "Ungültige Rechnung",
-    "unverified": "Unbestätigte Rechnung"
+    "unverified": "Unbestätigte Rechnung",
+    "dateFormat": "dd.MM.yyyy"
 }

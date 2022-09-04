@@ -36,5 +36,6 @@
     "unpaid": "Impayée",
     "valid": "Facture verifiée",
     "invalid": "Facture invalide",
-    "unverified": "Facture non verifiée"
+    "unverified": "Facture non verifiée",
+    "dateFormat": "dd/MM/yyyy"
 }

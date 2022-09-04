@@ -36,5 +36,6 @@
     "unpaid": "Unpaid",
     "valid": "Valid",
     "invalid": "Invalid",
-    "unverified": "Unverified"
+    "unverified": "Unverified",
+    "dateFormat": "yyyy-MM-dd"
 }
