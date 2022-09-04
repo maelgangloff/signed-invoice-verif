@@ -1,11 +1,11 @@
 {
     "scanADigitalSignatureStamp": "DSS-Puffer scannen",
     "usingTheApp": "Verwenden",
-    "usingTheAppContent": "Standardmäßig überprüft die App keine Signaturen.\nUm einen digitalen Signaturstempel (DSS) zu überprüfen, importieren Sie den öffentlichen Schlüssel, indem Sie auf die schlüsselförmige Schaltfläche klicken.\nSie können Flash mit der Flash-Schaltfläche aktivieren.",
+    "usingTheAppContent": "Standardmäßig überprüft die App keine Signaturen.\nUm einen digitalen Signaturstempel (DSS) zu überprüfen, importieren Sie den öffentlichen Schlüssel, indem Sie auf die schlüsselförmige Schaltfläche klicken.\nSie können Blitz mit der Blitz-Schaltfläche aktivieren.",
     "aboutTheApp": "Über diese App",
     "aboutTheAppContent1": "Mit dieser App können Sie die Echtheit von Rechnungen überprüfen, die mit dem ",
     "aboutTheAppContent2": "-Tool erstellt wurden.\n",
-    "aboutTheAppContent3": "Die App ist Open Source und ihr Code wird auf ",
+    "aboutTheAppContent3": "Die App ist Open Source und ihr Code ist auf ",
     "aboutTheAppContent4": " veröffentlicht.\nJeder Beitrag zur Verbesserung dieser App ist willkommen.",
     "disableVerification": "Verifizierung deaktivieren",
     "loadAPublicKey": "Öffentlichen Schlüssel importieren",
