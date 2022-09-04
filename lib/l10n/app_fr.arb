@@ -14,7 +14,7 @@
     "pleaseAllowFSAcessFile": "Veuillez autoriser le système à importer un fichier de clé.",
     "invalidPublicKey": "Clé publique invalide",
     "invalidPublicKeyContent": "Le fichier chargé ne contient pas une clé publique prime256v1.",
-    "unexpectedErrorOccured": "une erreur inattendue est survenue.",
+    "unexpectedErrorOccured": "Une erreur inattendue est survenue.",
     "toggleFlash": "Flash",
     "moreInformation": "Plus d'information",
     "invalidDSS": "DSS invalide",
