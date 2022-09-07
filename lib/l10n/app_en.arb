@@ -1,7 +1,7 @@
 {
     "scanADigitalSignatureStamp": "Scan a Digital Signature Stamp",
     "usingTheApp": "Using the app",
-    "usingTheAppContent": "By default the app does not verify the signatures.\nTo verify a Digital Signature Stamp (DSS), import the public key by clicking on the key icon.\nYou can toggle the flash with the flash button.",
+    "usingTheAppContent": "By default the app does not verify the signatures.\nTo verify a Digital Signature Stamp (DSS), import the public key by clicking on the key icon.\nYou can toggle the flash with the button.",
     "aboutTheApp": "About the app",
     "aboutTheAppContent1": "This mobile application allows to verify invoices generated with ",
     "aboutTheAppContent2": " tool.\n",

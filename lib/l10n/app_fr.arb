@@ -1,7 +1,7 @@
 {
     "scanADigitalSignatureStamp": "Scanner un tampon DSS",
     "usingTheApp": "Utilisation",
-    "usingTheAppContent": "Par défaut, l'application ne vérifie pas les signatures.\nPour vérifier un tampon de signature numérique (DSS), importez la clé publique en cliquant sur le bouton en forme de clé.\nVous pouvez activer le flash avec le bouton flash.",
+    "usingTheAppContent": "Par défaut, l'application ne vérifie pas les signatures.\nPour vérifier un tampon de signature numérique (DSS), importez la clé publique en cliquant sur le bouton en forme de clé.\nVous pouvez activer le flash avec le bouton.",
     "aboutTheApp": "À propos",
     "aboutTheAppContent1": "Cette application mobile vous permet de vérifier l'authenticité des factures générées avec l'outil ",
     "aboutTheAppContent2": " .\n",
