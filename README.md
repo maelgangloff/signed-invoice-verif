@@ -5,7 +5,7 @@ All verification steps are performed on your terminal. No data is transmitted. T
 Feel free to improve this app!
 
 ## Install
-Invoice Verif is available for free on the [Google Play Store](https://play.google.com/store/apps/details?id=fr.maelgangloff.signed_invoice_verif).
+Invoice Verif is available for free on the [Google Play Store](https://play.google.com/store/apps/details?id=fr.maelgangloff.signed_invoice_verif&utm_source=github).
 
 ## How it works
 The application works in two different modes:

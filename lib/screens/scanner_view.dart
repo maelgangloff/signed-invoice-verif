@@ -281,7 +281,7 @@ class ScannerViewState extends State<ScannerView> {
           ],
         );
       },
-    );
+    ).then((value) => controller!.resumeCamera());
   }
 
   void _showResults(BuildContext context, DecodedState state, dynamic jwt) {
