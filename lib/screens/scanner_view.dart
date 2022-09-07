@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:signed_invoice_verif/screens/informations_view.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'results_view.dart';
 
@@ -25,6 +26,20 @@ class ScannerViewState extends State<ScannerView> {
   QRViewController? controller;
   ECPublicKey? publicKey;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final storage = const FlutterSecureStorage();
+
+  Future<void> _loadPublicKey() async {
+    String? storedKey = await storage.read(key: 'publicKey');
+    setState(() {
+      publicKey = storedKey == null ? null : ECPublicKey(storedKey);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPublicKey();
+  }
 
   @override
   void reassemble() {
@@ -61,7 +76,8 @@ class ScannerViewState extends State<ScannerView> {
                       IconButton(
                           tooltip:
                               AppLocalizations.of(context)!.disableVerification,
-                          onPressed: () {
+                          onPressed: () async {
+                            await storage.delete(key: 'publicKey');
                             setState(() {
                               publicKey = null;
                             });
@@ -90,6 +106,9 @@ class ScannerViewState extends State<ScannerView> {
                             PlatformFile file = result.files.first;
                             Uint8List? data = file.bytes;
                             if (data == null) return;
+                            await storage.write(
+                                key: 'publicKey',
+                                value: String.fromCharCodes(data));
                             setState(() {
                               publicKey =
                                   ECPublicKey(String.fromCharCodes(data));
@@ -148,7 +167,6 @@ class ScannerViewState extends State<ScannerView> {
                   onPressed: () async {
                     await controller!.resumeCamera();
                     await controller?.toggleFlash();
-                    setState(() {});
                   },
                   icon: FutureBuilder<bool?>(
                     future: controller?.getFlashStatus(),
