@@ -121,7 +121,7 @@ class ScannerViewState extends State<ScannerView> {
                                   AppLocalizations.of(context)!
                                       .permissionDenied,
                                   AppLocalizations.of(context)!
-                                      .pleaseAllowFSAcessFile);
+                                      .pleaseAllowFSAccessFile);
                             } else {
                               _showInformation(
                                   context,

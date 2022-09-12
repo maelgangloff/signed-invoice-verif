@@ -11,7 +11,7 @@
     "loadAPublicKey": "Load a public key",
     "loadAPublicKeyFile": "Load a public key file",
     "permissionDenied": "Permission denied",
-    "pleaseAllowFSAcessFile": "Please allow file system access to open a key file.",
+    "pleaseAllowFSAccessFile": "Please allow file system access to open a key file.",
     "invalidPublicKey": "Invalid public key",
     "invalidPublicKeyContent": "The selected file does not contain a valid prime256v1 public key.",
     "unexpectedErrorOccured": "An unexpected error occured.",

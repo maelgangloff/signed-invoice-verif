@@ -11,7 +11,7 @@
     "loadAPublicKey": "Importer une clé publique",
     "loadAPublicKeyFile": "Importer un fichier de clé publique",
     "permissionDenied": "Permission refusée",
-    "pleaseAllowFSAcessFile": "Veuillez autoriser le système à importer un fichier de clé.",
+    "pleaseAllowFSAccessFile": "Veuillez autoriser le système à importer un fichier de clé.",
     "invalidPublicKey": "Clé publique invalide",
     "invalidPublicKeyContent": "Le fichier chargé ne contient pas une clé publique prime256v1.",
     "unexpectedErrorOccured": "Une erreur inattendue est survenue.",

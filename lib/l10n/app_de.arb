@@ -11,7 +11,7 @@
     "loadAPublicKey": "Öffentlichen Schlüssel importieren",
     "loadAPublicKeyFile": "öffentliche Schlüsseldatei importieren",
     "permissionDenied": "Erlaubnis verweigert",
-    "pleaseAllowFSAcessFile": "Bitte erlauben Sie dem System, eine Schlüsseldatei zu importieren.",
+    "pleaseAllowFSAccessFile": "Bitte erlauben Sie dem System, eine Schlüsseldatei zu importieren.",
     "invalidPublicKey": "Ungültiger öffentlicher Schlüssel",
     "invalidPublicKeyContent": "Die hochgeladene Datei enthält keinen öffentlichen Prime256v1-Schlüssel.",
     "unexpectedErrorOccured": "Ein unerwarteter Fehler ist aufgetreten.",
