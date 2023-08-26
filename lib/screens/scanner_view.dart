@@ -130,12 +130,6 @@ class ScannerViewState extends State<ScannerView> {
                                       AppLocalizations.of(context)!
                                           .unexpectedErrorOccured);
                             }
-                          } on JWTParseError {
-                            _showInformation(
-                                context,
-                                AppLocalizations.of(context)!.invalidPublicKey,
-                                AppLocalizations.of(context)!
-                                    .invalidPublicKeyContent);
                           } catch (e) {
                             _showInformation(
                                 context,
