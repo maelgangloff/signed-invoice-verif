@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+title: Signed Invoice Verif
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Maël
+    family-names: Gangloff
+    email: contact@maelgangloff.fr
+    orcid: 'https://orcid.org/0000-0002-7729-724X'
+identifiers:
+  - type: url
+    value: >-
+      https://github.com/maelgangloff/signed-invoice-verif/releases/tag/0.2.5
+    description: Release v0.2.5 of Signed Invoice Verif
+repository-code: 'https://github.com/maelgangloff/signed-invoice-verif'
+abstract: Verify the authenticity of invoices using cryptography
+keywords:
+  - Invoice
+  - Bill
+  - Generator
+  - PDF
+  - Crypto
+license: GPL-3.0-or-later
+version: 0.2.5
+date-released: '2024-02-27'
+license-url: 'https://github.com/maelgangloff/signed-invoice-verif/blob/master/LICENSE'
