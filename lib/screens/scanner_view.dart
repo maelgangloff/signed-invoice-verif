@@ -159,17 +159,17 @@ class ScannerViewState extends State<ScannerView> {
                   tooltip: AppLocalizations.of(context)!.toggleFlash,
                   padding: const EdgeInsets.all(8),
                   onPressed: () async {
-                    await controller!.resumeCamera();
                     await controller?.toggleFlash();
+                    setState(() {});
                   },
                   icon: FutureBuilder<bool?>(
                     future: controller?.getFlashStatus(),
                     builder: (context, snapshot) {
                       return Icon(
-                          snapshot.data ?? false
+                          (snapshot.data ?? false)
                               ? Icons.flash_on_rounded
                               : Icons.flash_off_rounded,
-                          color: snapshot.data ?? false
+                          color: (snapshot.data ?? false)
                               ? Colors.white
                               : Colors.white70,
                           size: 30);
