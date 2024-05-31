@@ -17,7 +17,7 @@
   "@paid": {},
   "loadAPublicKey": "Импортировать открытый ключ",
   "@loadAPublicKey": {},
-  "dateFormat": "дд/мм/гггг",
+  "dateFormat": "dd/MM/yyyy",
   "@dateFormat": {},
   "moreInformation": "Больше информации",
   "@moreInformation": {},
