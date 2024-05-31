@@ -72,5 +72,9 @@
   "aboutTheApp": "О",
   "@aboutTheApp": {},
   "signedBy": "Подписано",
-  "@signedBy": {}
+  "@signedBy": {},
+  "quantity": "Количество",
+  "@quantity": {},
+  "reference": "Ссылка",
+  "@reference": {}
 }
